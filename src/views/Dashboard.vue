@@ -1,12 +1,16 @@
 <script>
 import { computeSentence } from "../ecommerce_neuralnetwork_api";
-import { ref, Suspense } from "vue";
+import { ref, Suspense, onUpdated } from "vue";
+import { initFlowbite } from "flowbite";
 
 export default {
 	components: {
 		Suspense,
 	},
 	setup() {
+		onUpdated(() => {
+			initFlowbite();
+		});
 		const sentenceInput = ref("");
 		const isCompute = ref(false);
 		const result = ref(null);
@@ -140,156 +144,212 @@ export default {
 						<div class="flex my-2 justify-between items-center gap-5">
 							<span class="w-1/4">Product</span>
 							<div class="w-full rounded-full h-2.5 bg-green-100">
-								<div class="bg-green-300 h-2.5 rounded-full" style="width: 10%"></div>
+								<div
+									class="bg-green-300 h-2.5 rounded-full"
+									:style="{ width: result['data']['nn_output']['A2'][0][0] * 100 + '%' }"
+								></div>
 							</div>
-							<span class="text-right">45%</span>
+							<span class="text-right">{{
+								(result["data"]["nn_output"]["A2"][0][0] * 100).toFixed(2)
+							}}</span>
 						</div>
 						<div class="flex my-2 justify-between items-center gap-5">
 							<span class="w-1/4">Customer Service</span>
 							<div class="w-full rounded-full h-2.5 bg-yellow-50">
-								<div class="bg-yellow-200 h-2.5 rounded-full" style="width: 40%"></div>
+								<div
+									class="bg-yellow-200 h-2.5 rounded-full"
+									:style="{ width: result['data']['nn_output']['A2'][1][0] * 100 + '%' }"
+								></div>
 							</div>
-							<span class="text-right">45%</span>
+							<span class="text-right">{{
+								(result["data"]["nn_output"]["A2"][1][0] * 100).toFixed(2)
+							}}</span>
 						</div>
 						<div class="flex my-2 justify-between items-center gap-5">
 							<span class="w-1/4">Shipping / Delivery</span>
 							<div class="w-full rounded-full h-2.5 bg-purple-100">
-								<div class="bg-purple-300 h-2.5 rounded-full" style="width: 10%"></div>
+								<div
+									class="bg-purple-300 h-2.5 rounded-full"
+									:style="{ width: result['data']['nn_output']['A2'][2][0] * 100 + '%'}"
+								></div>
 							</div>
-							<span class="text-right">45%</span>
+							<span class="text-right">{{
+								(result["data"]["nn_output"]["A2"][2][0] * 100).toFixed(2)
+							}}</span>
 						</div>
 					</div>
-					<div class="mt-8 mb-5">
-						<h2 class="text-2xl font-bold mb-4">Under The Hood</h2>
-					</div>
 
-					<div class="ml-4 mb-10">
-						<ol class="relative text-gray-500 border-s border-gray-200">
-							<li class="mb-10 ms-6">
-								<span
-									class="absolute flex items-center justify-center w-8 h-8 bg-green-200 rounded-full -start-4 ring-4 ring-white"
+					<div
+						id="accordion-flush"
+						data-accordion="collapse"
+						data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+						data-inactive-classes="text-gray-500 dark:text-gray-400"
+					>
+						<!-- Header Accordion -->
+						<h2 id="accordion-flush-heading-1" class="mt-8 mb-5">
+							<button
+								type="button"
+								class="flex items-center justify-between w-full rtl:text-right text-2xl font-bold mb-4"
+								data-accordion-target="#accordion-flush-body-1"
+								aria-expanded="false"
+								aria-controls="accordion-flush-body-1"
+							>
+								<span>Under The Hood</span>
+								<svg
+									data-accordion-icon
+									class="w-3 h-3 rotate-180 shrink-0"
+									aria-hidden="true"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 10 6"
 								>
-									<svg
-										class="w-[18px] h-[18px] text-black"
-										aria-hidden="true"
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke="currentColor"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M3 6.2V5h11v1.2M8 5v14m-3 0h6m2-6.8V11h8v1.2M17 11v8m-1.5 0h3"
-										/>
-									</svg>
-								</span>
-								<h3 class="font-medium leading-tight text-black">
-									Original Text Input
-								</h3>
-								<p class="text-sm">Text from input without any modification</p>
-								<p
-									v-text="result['data']['sentence']"
-									class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-semibold"
-								></p>
-							</li>
-							<li class="mb-10 ms-6">
-								<span
-									class="absolute flex items-center justify-center w-8 h-8 bg-yellow-100 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 16 16"
-										fill="text-black"
-										class="w-4 h-4"
-									>
-										<path
-											fill-rule="evenodd"
-											d="M6.455 1.45A.5.5 0 0 1 6.952 1h2.096a.5.5 0 0 1 .497.45l.186 1.858a4.996 4.996 0 0 1 1.466.848l1.703-.769a.5.5 0 0 1 .639.206l1.047 1.814a.5.5 0 0 1-.14.656l-1.517 1.09a5.026 5.026 0 0 1 0 1.694l1.516 1.09a.5.5 0 0 1 .141.656l-1.047 1.814a.5.5 0 0 1-.639.206l-1.703-.768c-.433.36-.928.649-1.466.847l-.186 1.858a.5.5 0 0 1-.497.45H6.952a.5.5 0 0 1-.497-.45l-.186-1.858a4.993 4.993 0 0 1-1.466-.848l-1.703.769a.5.5 0 0 1-.639-.206l-1.047-1.814a.5.5 0 0 1 .14-.656l1.517-1.09a5.033 5.033 0 0 1 0-1.694l-1.516-1.09a.5.5 0 0 1-.141-.656L2.46 3.593a.5.5 0 0 1 .639-.206l1.703.769c.433-.36.928-.65 1.466-.848l.186-1.858Zm-.177 7.567-.022-.037a2 2 0 0 1 3.466-1.997l.022.037a2 2 0 0 1-3.466 1.997Z"
-											clip-rule="evenodd"
-										/>
-									</svg>
-								</span>
-								<h3 class="font-medium leading-tight text-black">Preprocessing</h3>
-								<p class="text-sm">
-									Perform case folding, punctuation removal, tokenization,
-									<br />stopword removal, and stemming
-								</p>
-								<p
-									v-text="result['data']['preprocess']"
-									class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-semibold"
-								></p>
-							</li>
-							<li class="mb-10 ms-6">
-								<span
-									class="absolute flex items-center justify-center w-8 h-8 bg-purple-100 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700"
-								>
-									<svg
-										class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400"
-										aria-hidden="true"
-										xmlns="http://www.w3.org/2000/svg"
-										fill="text-black"
-										viewBox="0 0 18 20"
-									>
-										<path
-											d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z"
-										/>
-									</svg>
-								</span>
-								<h3 class="font-medium leading-tight text-black">TF-IDF</h3>
-								<p class="text-sm">This step changes text input to vector value</p>
-								<p class="mt-4 text-sm font-normal text-black">
-									Important words in the sentence:
-								</p>
+									<path
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5 5 1 1 5"
+									/>
+								</svg>
+							</button>
+						</h2>
 
-								<div class="my-2 flex items-start gap-x-2">
-									<div v-for="(value, key) in result['data']['top_words']" :key="key">
-										<div class="py-2 px-2 bg-gray-50 rounded-xl">
-											<div class="text-gray-800 text-lg font-semibold">
-												{{ value["score"].toFixed(5) }}
-											</div>
-											<div
-												class="text-zinc-600 text-sm font-semibold items-center justify-center"
+						<!-- Body Accordion -->
+						<div
+							id="accordion-flush-body-1"
+							class="hidden mt-5"
+							aria-labelledby="accordion-flush-heading-1"
+						>
+							<div class="ml-4 mb-10">
+								<ol class="relative text-gray-500 border-s border-gray-200">
+									<li class="mb-10 ms-6">
+										<span
+											class="absolute flex items-center justify-center w-8 h-8 bg-green-200 rounded-full -start-4 ring-4 ring-white"
+										>
+											<svg
+												class="w-[18px] h-[18px] text-black"
+												aria-hidden="true"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
 											>
-												{{ value["word"] }}
+												<path
+													stroke="currentColor"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-width="2"
+													d="M3 6.2V5h11v1.2M8 5v14m-3 0h6m2-6.8V11h8v1.2M17 11v8m-1.5 0h3"
+												/>
+											</svg>
+										</span>
+										<h3 class="font-medium leading-tight text-black">
+											Original Text Input
+										</h3>
+										<p class="text-sm">Text from input without any modification</p>
+										<p
+											v-text="result['data']['sentence']"
+											class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-semibold"
+										></p>
+									</li>
+									<li class="mb-10 ms-6">
+										<span
+											class="absolute flex items-center justify-center w-8 h-8 bg-yellow-100 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 16 16"
+												fill="text-black"
+												class="w-4 h-4"
+											>
+												<path
+													fill-rule="evenodd"
+													d="M6.455 1.45A.5.5 0 0 1 6.952 1h2.096a.5.5 0 0 1 .497.45l.186 1.858a4.996 4.996 0 0 1 1.466.848l1.703-.769a.5.5 0 0 1 .639.206l1.047 1.814a.5.5 0 0 1-.14.656l-1.517 1.09a5.026 5.026 0 0 1 0 1.694l1.516 1.09a.5.5 0 0 1 .141.656l-1.047 1.814a.5.5 0 0 1-.639.206l-1.703-.768c-.433.36-.928.649-1.466.847l-.186 1.858a.5.5 0 0 1-.497.45H6.952a.5.5 0 0 1-.497-.45l-.186-1.858a4.993 4.993 0 0 1-1.466-.848l-1.703.769a.5.5 0 0 1-.639-.206l-1.047-1.814a.5.5 0 0 1 .14-.656l1.517-1.09a5.033 5.033 0 0 1 0-1.694l-1.516-1.09a.5.5 0 0 1-.141-.656L2.46 3.593a.5.5 0 0 1 .639-.206l1.703.769c.433-.36.928-.65 1.466-.848l.186-1.858Zm-.177 7.567-.022-.037a2 2 0 0 1 3.466-1.997l.022.037a2 2 0 0 1-3.466 1.997Z"
+													clip-rule="evenodd"
+												/>
+											</svg>
+										</span>
+										<h3 class="font-medium leading-tight text-black">Preprocessing</h3>
+										<p class="text-sm">
+											Perform case folding, punctuation removal, tokenization,
+											<br />stopword removal, and stemming
+										</p>
+										<p
+											v-text="result['data']['preprocess']"
+											class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-semibold"
+										></p>
+									</li>
+									<li class="mb-10 ms-6">
+										<span
+											class="absolute flex items-center justify-center w-8 h-8 bg-purple-100 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700"
+										>
+											<svg
+												class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400"
+												aria-hidden="true"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="text-black"
+												viewBox="0 0 18 20"
+											>
+												<path
+													d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z"
+												/>
+											</svg>
+										</span>
+										<h3 class="font-medium leading-tight text-black">TF-IDF</h3>
+										<p class="text-sm">This step changes text input to vector value</p>
+										<p class="mt-4 text-sm font-normal text-black">
+											Important words in the sentence:
+										</p>
+
+										<div class="my-2 flex items-start gap-x-2">
+											<div v-for="(value, key) in result['data']['top_words']" :key="key">
+												<div class="py-2 px-2 bg-gray-50 rounded-xl">
+													<div class="text-gray-800 text-lg font-semibold">
+														{{ value["score"].toFixed(5) }}
+													</div>
+													<div
+														class="text-zinc-600 text-sm font-semibold items-center justify-center"
+													>
+														{{ value["word"] }}
+													</div>
+												</div>
 											</div>
 										</div>
-									</div>
-								</div>
-								<p class="mt-4 text-sm font-normal text-black">
-									TF-IDF value of the sentence:
-								</p>
-								<p
-									v-text="result['data']['tfidf']"
-									class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-medium"
-								></p>
-							</li>
-							<li class="ms-6">
-								<span
-									class="absolute flex items-center justify-center w-8 h-8 bg-green-200 rounded-full -start-4 ring-4 ring-white"
-								>
-									<svg
-										class="w-3.5 h-3.5"
-										aria-hidden="true"
-										xmlns="http://www.w3.org/2000/svg"
-										fill="text-black"
-										viewBox="0 0 18 20"
-									>
-										<path
-											d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2ZM7 2h4v3H7V2Zm5.7 8.289-3.975 3.857a1 1 0 0 1-1.393 0L5.3 12.182a1.002 1.002 0 1 1 1.4-1.436l1.328 1.289 3.28-3.181a1 1 0 1 1 1.392 1.435Z"
-										/>
-									</svg>
-								</span>
-								<h3 class="font-medium leading-tight text-black">Neural Network</h3>
-								<p class="text-sm">perform neural network method</p>
-								<p
-									class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-medium"
-								>
-									asdnasdasd asjdasd asdasdkd aslkdhalsd asjkdhaksjdhaksjdhaks
-								</p>
-							</li>
-						</ol>
+										<p class="mt-4 text-sm font-normal text-black">
+											TF-IDF value of the sentence:
+										</p>
+										<p
+											v-text="result['data']['tfidf']"
+											class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-medium"
+										></p>
+									</li>
+									<li class="ms-6">
+										<span
+											class="absolute flex items-center justify-center w-8 h-8 bg-green-200 rounded-full -start-4 ring-4 ring-white"
+										>
+											<svg
+												class="w-3.5 h-3.5"
+												aria-hidden="true"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="text-black"
+												viewBox="0 0 18 20"
+											>
+												<path
+													d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2ZM7 2h4v3H7V2Zm5.7 8.289-3.975 3.857a1 1 0 0 1-1.393 0L5.3 12.182a1.002 1.002 0 1 1 1.4-1.436l1.328 1.289 3.28-3.181a1 1 0 1 1 1.392 1.435Z"
+												/>
+											</svg>
+										</span>
+										<h3 class="font-medium leading-tight text-black">Neural Network</h3>
+										<p class="text-sm">perform neural network method</p>
+										<p
+											class="text-md p-2 mt-2 bg-gray-50 rounded-md text-black font-medium"
+										>
+											asdnasdasd asjdasd asdasdkd aslkdhalsd asjkdhaksjdhaksjdhaks
+										</p>
+										<!-- sketct.js -->
+									</li>
+								</ol>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
