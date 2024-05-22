@@ -14,7 +14,6 @@
 		"bootstrap-icons": "^1.11.3",
 		"bootstrap-vue": "^2.23.1",
 		"flowbite": "^2.2.1",
-		"p5": "^1.9.4",
 		"papaparse": "^5.4.1",
 		"popper.js": "^1.16.1",
 		"vue": "^3.4.15",
@@ -22,8 +21,10 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-dsv": "^3.0.4",
+		"@types/p5": "^1.7.6",
 		"@vitejs/plugin-vue": "^4.5.2",
 		"autoprefixer": "^10.4.17",
+		"p5": "^1.9.4",
 		"postcss": "^8.4.33",
 		"tailwindcss": "^3.4.1",
 		"vite": "^5.0.8"
