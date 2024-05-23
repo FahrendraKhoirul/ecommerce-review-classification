@@ -1,7 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Dashboard from "../views/DashboardNew.vue";
 import Dataset from "../views/DatasetNew.vue";
-import Model from "../views/Model.vue";
+import Research from "../views/ResearchNew.vue";
 
 const routes = [
 	{
@@ -15,9 +15,9 @@ const routes = [
 		component: Dataset,
 	},
 	{
-		path: "/model",
-		name: "Model",
-		component: Model,
+		path: "/research",
+		name: "Research",
+		component: Research,
 	},
 ];
 

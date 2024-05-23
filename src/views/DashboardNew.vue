@@ -1,7 +1,7 @@
 <script>
 import { computeSentence } from "../ecommerce_neuralnetwork_api";
 import { initFlowbite } from "flowbite";
-import { ref, Suspense, onUpdated } from "vue";
+import { ref, Suspense, onUpdated, onMounted } from "vue";
 import datasetcsv from "../assets/Dataset Skripsi - Fix Dataset (Final).csv";
 import VueCanvas from "../components/canvas_component.vue";
 
@@ -11,7 +11,7 @@ export default {
 		VueCanvas,
 	},
 	setup() {
-		onUpdated(() => {
+		onMounted(() => {
 			initFlowbite();
 		});
 
@@ -21,6 +21,7 @@ export default {
 		const transformedData = ref(null);
 		const time = ref("");
 		const resultPrediction = ref("");
+		const dataset = datasetcsv;
 
 		const compute = async (sentence) => {
 			isCompute.value = true;
@@ -67,8 +68,6 @@ export default {
 		const selectItem = (item) => {
 			sentenceInput.value = item["text"];
 		};
-
-		const dataset = datasetcsv;
 
 		return {
 			sentenceInput,
@@ -470,6 +469,11 @@ export default {
 		</div>
 		<div class="shadow-md rounded-lg bg-white p-6 mb-6">
 			<h2 class="text-2xl font-semibold mb-4">Neural Network Visualization</h2>
+			<div v-if="result === null">
+				<p class="text-md font-sm text-gray-500">
+					Input review to see the neural network visualization
+				</p>
+			</div>
 			<VueCanvas :customData="transformedData" />
 		</div>
 	</div>
