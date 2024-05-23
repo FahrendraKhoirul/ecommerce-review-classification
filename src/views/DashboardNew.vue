@@ -11,6 +11,9 @@ export default {
 		VueCanvas,
 	},
 	setup() {
+		onUpdated(() => {
+			initFlowbite();
+		});
 		onMounted(() => {
 			initFlowbite();
 		});
