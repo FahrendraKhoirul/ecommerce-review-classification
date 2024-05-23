@@ -18,6 +18,7 @@ export default {
 		const sentenceInput = ref("");
 		const isCompute = ref(false);
 		const result = ref(null);
+		const transformedData = ref(null);
 		const time = ref("");
 		const resultPrediction = ref("");
 
@@ -32,6 +33,19 @@ export default {
 			const startTime = performance.now();
 			try {
 				result.value = await computeSentence(sentence);
+				// Transform the result data
+				transformedData.value = {
+					inputs: result.value.data.nn_output.A0,
+					weight1: result.value.data.nn_weight_bias.W1,
+					hidden1: result.value.data.nn_output.A1,
+					bias1: result.value.data.nn_weight_bias.b1,
+					weight2: result.value.data.nn_weight_bias.W2,
+					hidden2: result.value.data.nn_output.A2,
+					bias2: result.value.data.nn_weight_bias.b2,
+					output: [result.value.data.prediction],
+				};
+				console.log("=== Result and Transformed Data ===");
+				console.log(transformedData.value);
 			} finally {
 				isCompute.value = false;
 				const endTime = performance.now();
@@ -65,6 +79,7 @@ export default {
 			dataset,
 			resultPrediction,
 			selectItem,
+			transformedData,
 		};
 	},
 };
@@ -205,7 +220,7 @@ export default {
 				></h2>
 			</div>
 		</div>
-		<div v-if="result === null" class="p-12"></div>
+		<div v-if="result === null"></div>
 		<div v-else>
 			<div class="shadow-md rounded-lg bg-white p-6 mb-6">
 				<h2 class="text-2xl font-semibold mb-4">
@@ -419,9 +434,32 @@ export default {
 									</span>
 									<h3 class="font-medium leading-tight text-dark">Neural Network</h3>
 									<p class="text-sm">perform neural network method</p>
-
-									<VueCanvas />
-									<!-- sketct.js -->
+									<p class="mt-4 text-sm font-normal text-dark">Hidden Layer 2 (A2):</p>
+									<p
+										v-text="result['data']['nn_output']['A2']"
+										class="text-md p-2 mt-2 bg-gray-50 rounded-md text-dark font-medium"
+									></p>
+									<p class="mt-4 text-sm font-normal text-dark">
+										Output Layer (Softmax(A2)):
+									</p>
+									<div
+										class="flex items-start gap-x-2 mt-2 p-2 bg-gray-50 rounded-md text-dark font-medium"
+									>
+										<p
+											v-text="result['data']['prediction']"
+											class="text-md text-dark font-medium"
+										></p>
+										<p
+											v-text="
+												result['data']['prediction'] == 0
+													? 'Product'
+													: result['data']['prediction'] == 1
+													? 'Customer Service'
+													: 'Shipping and Delivery'
+											"
+											class="text-md text-dark font-medium"
+										></p>
+									</div>
 								</li>
 							</ol>
 						</div>
@@ -429,6 +467,10 @@ export default {
 				</div>
 			</div>
 			<!--End Accordion-->
+		</div>
+		<div class="shadow-md rounded-lg bg-white p-6 mb-6">
+			<h2 class="text-2xl font-semibold mb-4">Neural Network Visualization</h2>
+			<VueCanvas :customData="transformedData" />
 		</div>
 	</div>
 </template>
