@@ -51,7 +51,7 @@ export default {
 				var width = 600;
 				var ySpacing = 60;
 				var xSpacing = width / 8;
-				var r = 25;
+				var r = 30;
 
 				// Colors
 				let colorYellow = [255, 126, 71];
@@ -177,6 +177,7 @@ export default {
 					p5.text("Input Layer", xSpacing, ySpacing - 30);
 					var index = 0;
 
+					let indexForAccessInputValue = 0;
 					for (index = 0; index <= 8; index++) {
 						if (index == 4) {
 							// draw 3 vertical dot
@@ -196,6 +197,13 @@ export default {
 								data.inputs[index] * 255
 							);
 							p5.ellipse(xSpacing, ySpacing + index * ySpacing, r, r);
+							// add text
+							p5.noStroke();
+							p5.fill(0);
+							p5.textAlign(p5.CENTER, p5.CENTER);
+							let val = roundToDecimal(data.inputs[indexForAccessInputValue], 2);
+							p5.text(val, xSpacing, ySpacing + index * ySpacing);
+							indexForAccessInputValue++;
 						}
 					}
 				}
@@ -276,6 +284,7 @@ export default {
 					}
 
 					index = 0;
+					let indexForAccessWeightValue = 0;
 					// draw hidden layer
 					for (index = 0; index <= len; index++) {
 						if (index == 3 && hiddenIndex == 1) {
@@ -303,16 +312,23 @@ export default {
 								colorYellow[0],
 								colorYellow[1],
 								colorYellow[2],
-								hidden[index] * 255
+								hidden[indexForAccessWeightValue] * 255
 							);
 							p5.ellipse(indexColumn * xSpacing, ySpacing + index * ySpacing, r, r);
 							// add text
-							// noStroke();
-							// fill(0);
-							// textAlign(CENTER, CENTER);
-							// text(hidden[i], xSpacing * indexColumn, ySpacing + i * ySpacing);
+							p5.noStroke();
+							p5.fill(0);
+							p5.textAlign(p5.CENTER, p5.CENTER);
+							let val = roundToDecimal(hidden[indexForAccessWeightValue], 2);
+							p5.text(val, xSpacing * indexColumn, ySpacing + index * ySpacing);
+							indexForAccessWeightValue++;
 						}
 					}
+				}
+
+				function roundToDecimal(number, decimals) {
+					const factor = 10 ** decimals;
+					return Math.round(number * factor) / factor;
 				}
 
 				function drawOutput(fromHidden, weight, hidden, bias, indexColumn) {
