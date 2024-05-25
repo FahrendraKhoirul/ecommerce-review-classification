@@ -45,8 +45,16 @@ export default {
 			},
 		},
 	},
+	data() {
+		return {
+			p5Instance: null,
+		};
+	},
 	methods: {
 		initializeP5(data = this.customData) {
+			if (this.p5Instance) {
+				this.p5Instance.remove(); // Remove the existing P5 instance
+			}
 			const script = function (p5) {
 				var width = 600;
 				var ySpacing = 60;
@@ -383,7 +391,7 @@ export default {
 			// new P5(script, document.getElementById("vue-canvas"));
 			const vueCanvasElement = document.getElementById("vue-canvas");
 			if (vueCanvasElement) {
-				new P5(script, vueCanvasElement);
+				this.p5Instance = new P5(script, vueCanvasElement);
 			}
 		},
 	},
