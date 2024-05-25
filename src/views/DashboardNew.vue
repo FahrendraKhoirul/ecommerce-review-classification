@@ -38,6 +38,7 @@ export default {
 			try {
 				result.value = await computeSentence(sentence);
 				// Transform the result data
+				transformedData.value = ref(null);
 				transformedData.value = {
 					inputs: result.value.data.nn_output.A0,
 					weight1: result.value.data.nn_weight_bias.W1,
